@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "hooks": {
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/log-event.cjs prompt",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/log-event.cjs tool_use",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "subagentStart": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/log-event.cjs subagent_start",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "subagentStop": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/log-event.cjs subagent_stop",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "notification": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/log-event.cjs notification",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
