@@ -159,3 +159,50 @@ What it got wrong:
 - Throughput and backlog recovery rates were estimated.
 - PayEx capabilities could not be verified from available information.
 - Calendar effort estimates were not validated against actual team velocity.
+
+## Task 3 — Autonomy Policy (Dependency Bumps)
+**Date:** 2026-10-31
+**Model:** GitHub Copilot (auto)
+**Prompts in this task:** 1
+
+### Prompt 11 — gap finding
+**I asked:** Here is my draft autonomy policy for dependency bumps.
+Context: financial service, SOC 2 audit in 6 months, 2 of 6 engineers new to codebase.
+
+[paste your draft]
+
+Find the gaps:
+1. What can go wrong at Level 1 (PR with human merge) that my gates don't catch?
+2. What extra control is needed for packages in the payment or auth path specifically?
+3. What is a defensible evidence threshold for Level 1 → Level 2 promotion?
+4. Minimum acceptable approval process for a level promotion?
+
+TASK-TAG: task-3-autonomy
+
+**Copilot said:**
+1. **Level 1 gaps:** A green CI run and human review do not guarantee qualified ownership, adequate dependency/transitive-diff and provenance review, runtime/deployment/rollback coverage, or security scans that cover the full dependency tree. The policy also leaves “no missed breakage” and “zero regression” undefined; Level 0 risk is not literally zero.
+2. **Payment/auth controls:** Keep these packages out of auto-merge, classify direct and transitive dependencies, require domain-owner and independent security review, test payment idempotency/ambiguous timeouts and auth boundaries, and document rollback.
+3. **Level 1 → Level 2 evidence:** Treat 20 PRs as a starting point, not sufficient alone. Require a defined observation period across the proposed package scope, passing CI/security/staging checks, no attributable production regressions or unresolved findings, and per-PR evidence. Limit auto-merge to an allowlist and continue excluding payment, auth, and audit dependencies.
+4. **Promotion approval:** Require two independent approvals, such as engineering policy owner and security reviewer, with evidence review, approved package scope, effective date, rollback/disable procedure, and next review date. The proposer should not be the sole approver.
+
+### What I kept
+- Domain-qualified reviewer requirement at Level 1
+- Independent security reviewer for payment/auth packages
+- Transitive dependency diff required in every Level 1 PR
+- Full dependency tree scan (not just direct deps)
+- 90-calendar-day minimum alongside 20 PR count for Level 1 → Level 2
+- Two independent approvers for promotion, proposer excluded
+
+### What I changed
+- Did not adopt provenance or build script checks — no tooling exists, out of scope
+- Did not add license review — no legal process on this team
+- Simplified the evidence record to a table rather than Copilot's scoring model
+
+### What it got wrong
+- Said "Level 0 risk is zero is too absolute" correctly, then suggested
+  provenance checks at Level 0 — contradicts its own point since Level 0
+  makes no code changes
+- Proposed a 90-day evidence bar without flagging that a 6-person team
+  doing manual reviews could take 6+ months to hit 20 PRs — practical
+  timeline risk not mentioned
+- Left "zero regression" undefined — did not say who decides or how it is measured
