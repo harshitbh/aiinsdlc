@@ -1,0 +1,8 @@
+[HttpPost("{id}/reject")]
+[RequireRole("Approver")]
+public IActionResult Reject(string id, [FromBody] RejectRequest request)
+{
++    _logger.LogInformation("Reject called for {Id}", id);
+    var invoice = _approvals.Reject(id, request.Reason, CurrentUser.Name);
+    return Ok(DecisionResponse.From(invoice));
+}

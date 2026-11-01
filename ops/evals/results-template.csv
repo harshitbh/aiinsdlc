@@ -1,31 +1,73 @@
 run,case,model,prompt_version,verdict,finding_summary,confidence_reported,notes
-1,case-01,,v1,,,,
-1,case-02,,v1,,,,
-1,case-03,,v1,,,,
-1,case-04,,v1,,,,
-1,case-05,,v1,,,,
-1,case-06,,v1,,,,
-1,case-07,,v1,,,,
-1,case-08,,v1,,,,
-1,case-09,,v1,,,,
-1,case-10,,v1,,,,
-2,case-01,,v1,,,,
-2,case-02,,v1,,,,
-2,case-03,,v1,,,,
-2,case-04,,v1,,,,
-2,case-05,,v1,,,,
-2,case-06,,v1,,,,
-2,case-07,,v1,,,,
-2,case-08,,v1,,,,
-2,case-09,,v1,,,,
-2,case-10,,v1,,,,
-3,case-01,,v1,,,,
-3,case-02,,v1,,,,
-3,case-03,,v1,,,,
-3,case-04,,v1,,,,
-3,case-05,,v1,,,,
-3,case-06,,v1,,,,
-3,case-07,,v1,,,,
-3,case-08,,v1,,,,
-3,case-09,,v1,,,,
-3,case-10,,v1,,,,
+1,case-01,github-copilot auto,v1,caught,"BulkApprove — nullable request.Ids is enumerated without validation; null causes an unhandled exception.",high,"Null iteration failure is directly visible in the diff."
+1,case-02,github-copilot auto,v1,caught,"Search — customer and status query parameters are interpolated directly into SQL, allowing SQL injection.",high,"Direct SQL interpolation is visible in the diff."
+1,case-03,github-copilot auto,v1,caught,"Apply — changes financial rounding from AwayFromZero to ToZero and rounds the discount before subtraction, which can produce incorrect invoice totals.",high,"The diff directly changes rounding mode and operation order."
+1,case-04,github-copilot auto,v1,clean,"No issue found; this consistently renames the repository field and constructor parameter without changing behavior.",high,"Rename is consistent and behavior-preserving."
+1,case-05,github-copilot auto,v1,caught,"InvoicesController.Delete — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing unauthorized roles to delete invoices.",high,"Expected defect: destructive actions must be Admin-only. TASK-TAG: task-4-runs"
+1,case-06,github-copilot auto,v1,clean,"No issue found; the added tests cover whitespace rejection reasons, approval metadata, and unknown invoice handling.",high,"Test-only diff adds coverage without changing production behavior."
+1,case-07,github-copilot auto,v1,caught,"ApprovalsController.Approve — logs the full invoice and user session, potentially exposing sensitive financial and session data in application logs.",medium,"Exact session fields and log access/retention are not shown; whole-object logging still creates a plausible exposure."
+1,case-08,github-copilot auto,v1,caught,"InMemoryInvoiceRepository — replacing ConcurrentDictionary with Dictionary makes concurrent requests unsafe; the ContainsKey-then-write sequence can also admit duplicate IDs under a race.",high,"Repository is shared across requests; the non-atomic dictionary operations are explicit."
+1,case-09,github-copilot auto,v1,caught,"README — signing out and back in does not reset sample data; the in-memory invoice repository persists for the process lifetime, so the documented reset procedure is ineffective.",medium,"Depends on repository/session lifetime outside this README diff; confirm against app registration."
+1,case-10,github-copilot auto,v1,caught,"ApiControllerBase.Handle — catches every Exception and returns HTTP 200 with a generic completed status, hiding failures and reporting unsuccessful operations as successful.",high,"Catch-all and success status are explicit in the diff."
+1,case-11,github-copilot auto,v1,caught,"DeleteInvoice — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing unauthorized roles to delete invoices.",high,"Missing Admin authorization is explicit on a destructive endpoint."
+1,case-12,github-copilot auto,v1,clean,"No issue found; the added log records only the invoice ID and does not expose invoice or session data.",high,"The added log statement records only the identifier."
+2,case-01,github-copilot auto,v1,caught,"BulkApprove — enumerates nullable request.Ids without validation, so a null value causes an unhandled exception.",high,"Null iteration failure is directly visible in the diff."
+2,case-02,github-copilot auto,v1,caught,"Search — customer and status query parameters are interpolated directly into SQL, enabling SQL injection.",high,"Unparameterized SQL interpolation is explicit in the diff."
+2,case-03,github-copilot auto,v1,caught,"Apply — changes financial rounding from AwayFromZero to ToZero and rounds the discount before subtraction, which can produce incorrect invoice totals.",high,"The diff directly changes rounding mode and operation order."
+2,case-04,github-copilot auto,v1,clean,"No issue found; the repository field and constructor parameter are renamed consistently without changing behavior.",high,"Rename is consistent and behavior-preserving."
+2,case-05,github-copilot auto,v1,caught,"InvoicesController.Delete — destructive invoice deletion lacks [RequireRole(""Admin"")], so the endpoint is not restricted to Admins.",high,"Missing Admin authorization is explicit on a destructive action."
+2,case-06,github-copilot auto,v1,clean,"No issue found; the tests cover whitespace rejection, approval metadata, and handling an unknown invoice.",high,"Test-only change adds coverage without changing production behavior."
+2,case-07,github-copilot auto,v1,caught,"ApprovalsController.Approve — logs the full invoice and session, risking exposure of financial and session data in application logs.",medium,"Exact session fields and log access/retention are not shown; whole-object logging still creates a plausible exposure."
+2,case-08,github-copilot auto,v1,caught,"InMemoryInvoiceRepository — replacing ConcurrentDictionary with Dictionary makes concurrent access unsafe, and the ContainsKey-then-write sequence can allow duplicate IDs under a race.",high,"Repository is shared across requests; the non-atomic dictionary operations are explicit."
+2,case-09,github-copilot auto,v1,caught,"README — signing out and back in does not reset the in-memory invoice data; it persists until the process restarts.",medium,"The conclusion depends on repository lifetime outside the README diff."
+2,case-10,github-copilot auto,v1,caught,"ApiControllerBase.Handle — catches all exceptions and returns HTTP 200, masking failures as successful completions.",high,"Catch-all and success status are explicit in the diff."
+2,case-11,github-copilot auto,v1,caught,"DeleteInvoice — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing non-Admin callers to delete invoices.",high,"Missing Admin authorization is explicit on a destructive endpoint."
+2,case-12,github-copilot auto,v1,clean,"No issue found; the rejection log records only the invoice ID and does not expose invoice or session data.",high,"The added log statement records only the identifier."
+3,case-01,github-copilot auto,v1,caught,"BulkApprove — enumerates nullable request.Ids without validation, so a null value causes an unhandled exception.",high,"Null iteration failure is directly visible in the diff."
+3,case-02,github-copilot auto,v1,caught,"Search — customer and status query parameters are interpolated directly into SQL, enabling SQL injection.",high,"Unparameterized SQL interpolation is explicit in the diff."
+3,case-03,github-copilot auto,v1,caught,"Apply — changes financial rounding from AwayFromZero to ToZero and rounds the discount before subtraction, altering invoice totals.",high,"The diff directly changes rounding mode and operation order."
+3,case-04,github-copilot auto,v1,clean,"No issue found; the repository field and constructor parameter are renamed consistently without changing behavior.",high,"Rename is consistent and behavior-preserving."
+3,case-05,github-copilot auto,v1,caught,"InvoicesController.Delete — destructive invoice deletion lacks [RequireRole(""Admin"")], so the endpoint is not restricted to Admins.",high,"Missing Admin authorization is explicit on a destructive action."
+3,case-06,github-copilot auto,v1,clean,"No issue found; the tests cover whitespace rejection, approval metadata, and handling an unknown invoice.",high,"Test-only change adds coverage without changing production behavior."
+3,case-07,github-copilot auto,v1,caught,"ApprovalsController.Approve — logging the full invoice and session may expose sensitive financial and session data in application logs.",medium,"Exact session fields and log access/retention are not shown; whole-object logging still creates a plausible exposure."
+3,case-08,github-copilot auto,v1,caught,"InMemoryInvoiceRepository — replacing ConcurrentDictionary with Dictionary makes concurrent access unsafe and can allow duplicate IDs under a race.",high,"Repository is shared across requests; the non-atomic dictionary operations are explicit."
+3,case-09,github-copilot auto,v1,caught,"README — signing out and back in does not reset in-memory invoice data; it persists until the process restarts.",medium,"The conclusion depends on repository lifetime outside the README diff."
+3,case-10,github-copilot auto,v1,caught,"ApiControllerBase.Handle — catches all exceptions and returns HTTP 200, masking failures as successful completions.",high,"Catch-all and success status are explicit in the diff."
+3,case-11,github-copilot auto,v1,caught,"DeleteInvoice — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing non-Admin callers to delete invoices.",high,"Missing Admin authorization is explicit on a destructive endpoint."
+3,case-12,github-copilot auto,v1,clean,"No issue found; the rejection log records only the invoice ID and does not expose invoice or session data.",high,"The added log statement records only the identifier."
+4,case-01,github-copilot auto,v2,caught,"BulkApprove — enumerates nullable request.Ids without validation, so a null value causes an unhandled exception in the approval endpoint.",high,"Null iteration failure is directly visible in the diff."
+4,case-02,github-copilot auto,v2,caught,"Search — interpolates customer and status query parameters into SQL, enabling SQL injection and unauthorized data access or modification.",high,"Unparameterized SQL interpolation is explicit in the diff."
+4,case-03,github-copilot auto,v2,caught,"Apply — changes financial rounding from AwayFromZero to ToZero and rounds the discount before subtraction, which can produce incorrect invoice totals.",high,"The diff directly changes rounding mode and operation order."
+4,case-04,github-copilot auto,v2,clean,"No issue found; the repository field and constructor parameter are renamed consistently without changing behavior.",high,"Rename is consistent and behavior-preserving."
+4,case-05,github-copilot auto,v2,caught,"InvoicesController.Delete — destructive invoice deletion lacks [RequireRole(""Admin"")], permitting unauthorized roles to delete financial records.",high,"Missing Admin authorization is explicit on a destructive action."
+4,case-06,github-copilot auto,v2,clean,"No issue found; the added tests cover whitespace rejection, approval metadata, and handling an unknown invoice.",high,"Test-only diff adds coverage without changing production behavior."
+4,case-07,github-copilot auto,v2,caught,"ApprovalsController.Approve — logging the full invoice and session risks exposing sensitive financial and session data in logs, creating a SOC 2 concern.",medium,"SOC 2 raises impact, but exact session fields and log access/retention are not specified."
+4,case-08,github-copilot auto,v2,caught,"InMemoryInvoiceRepository — replacing ConcurrentDictionary with Dictionary makes concurrent access unsafe; the ContainsKey-then-write sequence can also allow duplicate IDs under a race.",high,"Repository is shared across requests; the non-atomic dictionary operations are explicit."
+4,case-09,github-copilot auto,v2,caught,"README — signing out and back in does not reset in-memory invoice data; it persists until the process restarts.",medium,"The conclusion depends on repository lifetime outside the README diff."
+4,case-10,github-copilot auto,v2,caught,"ApiControllerBase.Handle — catches all exceptions and returns HTTP 200, concealing failures as successful completions.",high,"Catch-all and success status are explicit in the diff."
+4,case-11,github-copilot auto,v2,caught,"DeleteInvoice — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing unauthorized roles to delete financial records.",high,"Missing Admin authorization is explicit on a destructive endpoint."
+4,case-12,github-copilot auto,v2,clean,"No issue found; the rejection log records only the invoice ID.",high,"The added log statement records only the identifier."
+5,case-01,github-copilot auto,v2,caught,"BulkApprove — enumerates nullable request.Ids without validation, so a null value causes an unhandled exception.",high,"Null iteration failure is directly visible in the diff."
+5,case-02,github-copilot auto,v2,caught,"Search — interpolates customer and status query parameters into SQL, enabling SQL injection.",high,"Direct SQL interpolation is explicit in the diff."
+5,case-03,,github-copilot auto,v2,caught,"Apply — changes financial rounding from AwayFromZero to ToZero and rounds the discount before subtraction, altering invoice totals.",high,"Financial rounding behavior changes directly in the diff. "
+5,case-04,github-copilot auto,v2,,clean,"No issue found; the repository field and constructor parameter are renamed consistently without changing behavior.",high,"Behavior-preserving rename only."
+5,case-05,github-copilot auto,v2,caught,"InvoicesController.Delete — destructive invoice deletion lacks [RequireRole(""Admin"")], allowing unauthorized callers to delete invoices.",high,"Missing Admin authorization is explicit in the diff."
+5,case-06,github-copilot auto,v2,clean,"No issue found; the diff adds tests for whitespace rejection, approval metadata, and unknown-invoice handling.",high,"Test-only change adds coverage without changing production behavior."
+5,case-07,github-copilot auto,v2,caught,"ApprovalsController.Approve — logging the full invoice and session may expose sensitive financial or session data in logs.",medium,"The exact session contents and log access/retention are not shown; whole-object logging creates a plausible exposure."
+5,case-08,github-copilot auto,v2,caught,"InMemoryInvoiceRepository — replacing ConcurrentDictionary with Dictionary makes concurrent access unsafe and can allow duplicate IDs under a race.",high,"The diff removes the thread-safe collection and atomic TryAdd operation."
+5,case-09,github-copilot auto,v2,caught,"README — signing out and back in is documented as resetting sample data, but the in-memory invoice repository persists until the process restarts.",medium,"The conclusion depends on repository lifetime outside the README diff."
+5,case-10,github-copilot auto,v2,caught,"ApiControllerBase.Handle — catches all exceptions and returns HTTP 200, masking failures as successful completions.",high,"Catch-all and success status are explicit in the diff."
+5,case-11,github-copilot auto,v2,caught,"DeleteInvoice — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing unauthorized roles to delete invoices.",high,"Missing Admin authorization is explicit in the diff."
+5,case-12,github-copilot auto,v2,clean,"No issue found; the log records only the invoice ID and does not expose invoice or session contents.",high,"Logging an identifier is appropriate for audit troubleshooting."
+6,case-01,github-copilot auto,v2,caught,"BulkApprove — enumerates nullable request.Ids without validation, so a null value causes an unhandled exception.",high,"Null iteration failure is directly visible in the diff."
+6,case-02,github-copilot auto,v2,caught,"Search — interpolates customer and status query parameters directly into SQL, enabling SQL injection.",high,"Unparameterized SQL interpolation is explicit in the diff."
+6,case-03,github-copilot auto,v2,caught,"Apply — changes financial rounding from AwayFromZero to ToZero and rounds the discount before subtraction, altering invoice totals.",high,"The diff directly changes rounding mode and operation order."
+6,case-04,github-copilot auto,v2,clean,"No issue found; the repository field and constructor parameter are renamed consistently without changing behavior.",high,"Behavior-preserving rename only."
+6,case-05,github-copilot auto,v2,caught,"InvoicesController.Delete — destructive invoice deletion lacks [RequireRole(""Admin"")], allowing unauthorized callers to delete invoices.",high,"Missing Admin authorization is explicit in the diff."
+6,case-06,github-copilot auto,v2,clean,"No issue found; the diff adds tests for whitespace rejection, approval metadata, and unknown-invoice handling.",high,"Test-only change adds coverage without changing production behavior."
+6,case-07,github-copilot auto,v2,caught,"ApprovalsController.Approve — logging the full invoice and session may expose sensitive financial or session data in logs.",medium,"Exact session contents and log access/retention are not shown; whole-object logging creates a plausible exposure."
+6,case-08,github-copilot auto,v2,caught,"InMemoryInvoiceRepository — replacing ConcurrentDictionary with Dictionary makes concurrent access unsafe and can allow duplicate IDs under a race.",high,"The diff removes the thread-safe collection and atomic TryAdd operation."
+6,case-09,github-copilot auto,v2,caught,"README — signing out and back in is documented as resetting sample data, but the in-memory invoice repository persists until the process restarts.",medium,"The conclusion depends on repository lifetime outside the README diff."
+6,case-10,github-copilot auto,v2,caught,"ApiControllerBase.Handle — catches all exceptions and returns HTTP 200, masking failures as successful completions.",high,"Catch-all and success status are explicit in the diff."
+6,case-11,github-copilot auto,v2,caught,"DeleteInvoice — destructive invoice deletion has no [RequireRole(""Admin"")] restriction, allowing unauthorized roles to delete invoices.",high,"Missing Admin authorization is explicit in the diff."
+6,case-12,github-copilot auto,v2,clean,"No issue found; the rejection log records only the invoice ID.,high,"The added log statement records only an identifier."

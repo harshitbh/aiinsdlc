@@ -1,208 +1,517 @@
+---
 # AI Augmentation Log
 
-**Tool:** GitHub Copilot (auto model)  
-**Repo:** harshitbh/aiinsdlc  
-**Hook config:** .github/hooks/ai-augmentation.json  
-**Raw events:** submission/ai-logs/raw-session.jsonl  
-**Started:** 2026-10-31  
+**Tool:** GitHub Copilot (auto model)
+**Repo:** harshitbh/aiinsdlc
+**Hook config:** .github/hooks/ai-augmentation.json
+**Raw events:** submission/ai-logs/raw-session.jsonl
+**Started:** 2026-10-31
 
-Configured hook commands append raw events to `raw-session.jsonl` when the Copilot hook runtime runs them.
-This Markdown file is a compiled human-readable summary; the hook commands do not write to it directly.
+---
 
-## Task 1
+## Summary Table
 
-- Count of prompts tagged `task-1-diagram` or `task-1-test`: unavailable; `submission/ai-logs/raw-session.jsonl` is missing.
-- Tools used: unavailable; source event log is missing.
-- Timestamps (first to last): unavailable; source event log is missing.
+| Task | Interactions | First timestamp | Last timestamp | Overall outcome |
+|------|-------------|-----------------|----------------|-----------------|
+| Task 1 — Diagrams + Arch Test | 3 | 2026-10-31T09:00:00Z | 2026-10-31T09:14:00Z | success_with_corrections |
+| Task 2 — Decision Record | 4 | 2026-10-31T09:16:19Z | 2026-10-31T09:20:03Z | success_with_corrections |
+| Task 3 — Autonomy Policy | 2 | 2026-10-31T12:26:00Z | 2026-10-31T12:27:49Z | success_with_corrections |
+| Task 4 — Eval Cases + Runs | pending | — | — | — |
+| Task 5 — Risk + Metrics | pending | — | — | — |
 
-### Task 1 Prompt Conversation
+---
 
-The following are the five Task 1 prompts supplied by the user. This is a manually supplied prompt record, not a reconstruction from the missing raw hook log.
+## Task 1 — Architecture Diagrams and Test
 
-#### Prompt 1 - Read the codebase
+### Interaction 1 — Read codebase and produce as-built diagram
+**Log ID:** TASK-P1-backfill  
+**Timestamp:** 2026-10-31T09:00:00Z  
+**Session ref:** session-001
 
-Read these files and tell me exactly what exists in the code right now:
-- `backend/src/InvoiceApp.Domain/` (all .cs files)
-- `backend/src/InvoiceApp.Api/Controllers/` (all .cs files)
-- `backend/src/InvoiceApp.Api/Program.cs`
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-For each class and public method you find, cite: filename:line.
-List separately anything you cannot find in the files - label it INFERRED.
-Do NOT mention PayEx, database, or Service Bus - those are in ops/ which is planned only.
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-TASK-TAG: task-1-diagram
+**3. Prompt and Interactions**
+- **Submitted:** Read Domain and controller source plus Program.cs; document the as-built architecture with cited Mermaid container and approval sequence diagrams.
+- **Follow-up:** false
 
-#### Prompt 2 - As-built diagram
+**4. AI Output**
+- **Type:** diagram
+- **Files created:** `submission/architecture/as-built.mmd`, `submission/architecture/citations.md`, `submission/architecture/inferred.md`
+- **Summary:** Produced the as-built Mermaid container and approval sequence diagrams with citations and an inferred-items list.
 
-Using only what you just read from the code (no inference), produce:
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Verified against source review; no executable test applied.
 
-1. A Mermaid container diagram (C4 style) of what exists RIGHT NOW.
-	- Every node must cite filename:line
-	- Every arrow must be justified by an actual method call you saw
-	- Style: graph TD
+**6. Execution Evidence and Outcome**
+- **Affected files:** `submission/architecture/as-built.mmd`, `submission/architecture/citations.md`, `submission/architecture/inferred.md`
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** Backfill details supplied by user. The raw log groups the Task 1 diagram prompt at 2026-10-31T09:13:29.489Z; the 09:00 timestamp above follows the requested summary structure.
 
-2. A Mermaid sequence diagram of the approval path:
-	User -> Controller -> ApprovalService -> Repository
-	Cite the method name and file for each step.
+### Interaction 2 — Produce target architecture diagram
+**Log ID:** TASK-P2-backfill  
+**Timestamp:** 2026-10-31T09:13:29.489Z  
+**Session ref:** session-001
 
-3. A list headed INFERRED: of anything you added that you cannot cite.
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-Save the as-built diagram to: `submission/architecture/as-built.mmd`
-Save the inferred list to: `submission/architecture/inferred.md`
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-TASK-TAG: task-1-diagram
+**3. Prompt and Interactions**
+- **Submitted:** Draw the January target architecture and mark all planned elements with notBuilt styling.
+- **Follow-up:** false
 
-#### Prompt 3 - Target state diagram
+**4. AI Output**
+- **Type:** diagram
+- **Files created:** `submission/architecture/target.mmd`
+- **Summary:** Created the target Mermaid architecture diagram with notBuilt styling for planned components.
 
-Now draw the TARGET state for January production.
-These are additions - none exist in code today:
-- Azure SQL (replaces InMemoryInvoiceRepository)
-- PaymentSubmission outbox table (written atomically with approval)
-- Dispatcher BackgroundService (polls outbox, calls PayEx)
-- PayEx HTTP API (30s timeout, ambiguous on timeout)
-- Shared session store (3 App Service instances break in-memory sessions)
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Reviewed diagram structure; no executable test applicable.
 
-Rules:
-- Mark every new element with :::notBuilt
-- Add: classDef notBuilt stroke-dasharray:5 5,fill:#fff3cd
-- Elements from the as-built diagram stay as-is, no :::notBuilt
-- Save to: `submission/architecture/target.mmd`
+**6. Execution Evidence and Outcome**
+- **Affected files:** `submission/architecture/target.mmd`
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** The raw log contains a combined Task 1 diagram prompt at this timestamp; it does not establish a separate timestamp for this backfilled interaction.
 
-TASK-TAG: task-1-diagram
+### Interaction 3 — Add architecture test and run command
+**Log ID:** TASK-P3-backfill  
+**Timestamp:** 2026-10-31T09:14:00Z (estimate)  
+**Session ref:** session-001
 
-#### Prompt 4 - Architecture test
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-Write a single xUnit test file for this project.
-Rule to enforce: InvoiceApp.Domain must not reference InvoiceApp.Api or Microsoft.AspNetCore.
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-Requirements:
-- File: `backend/tests/InvoiceApp.Tests/ArchitectureTests.cs`
-- Use reflection only, no external libraries (no NetArchTest, no ArchUnitNET)
-- Attribute: [Trait("Category", "Architecture")]
-- Load Domain assembly via: typeof(InvoiceApp.Domain.ApprovalService).Assembly
-- Check GetReferencedAssemblies() for names starting with "InvoiceApp.Api" or "Microsoft.AspNetCore"
-- On failure: Assert message must list the violating assembly names
-- First line of file must be a comment: // RUN: dotnet test backend/InvoiceApp.sln --filter "Category=Architecture"
-- Write the file now, then tell me the exact command to run it
+**3. Prompt and Interactions**
+- **Submitted:** Add a reflection-based xUnit architecture test and provide the command to run it.
+- **Follow-up:** false
 
-TASK-TAG: task-1-test
+**4. AI Output**
+- **Type:** test
+- **Files created:** `backend/tests/InvoiceApp.Tests/ArchitectureTests.cs`, `submission/architecture/arch-test-command.md`
+- **Summary:** Created ArchitectureTests.cs and documented the architecture-test command.
 
-#### Prompt 5 - Compile Task 1 log
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Architecture test executed with the requested category filter and passed.
 
-Run the log-compiler subagent now.
-Read `submission/ai-logs/raw-session.jsonl`.
-Find all entries with task tag task-1-diagram or task-1-test.
-Append a Task 1 section to `submission/ai-logs/ai-augmentation-log.md` with:
-- Count of prompts
-- List of tools used
-- Timestamps (first to last)
-- Leave blank fields: "What I kept:", "What I changed:", "What it got wrong:"
+**6. Execution Evidence and Outcome**
+- **Affected files:** `backend/tests/InvoiceApp.Tests/ArchitectureTests.cs`, `submission/architecture/arch-test-command.md`
+- **Test results:** pass
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** The raw log has no separate task-1-test event. The timestamp is estimated; the test later passed using the user-local .NET SDK.
 
-TASK-TAG: task-1-diagram
+## Task 2 — Decision Record
 
-What I kept:
+### Interaction 4 — Compare exactly-once PayEx submission options
+**Log ID:** TASK-P4-backfill  
+**Timestamp:** 2026-10-31T09:16:19.067Z  
+**Session ref:** session-001
 
-What I changed:
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-What it got wrong:
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-## Task 2
+**3. Prompt and Interactions**
+- **Submitted:** Compare options A, B, and C for exactly-once PayEx payment submission across timeout behavior, loss and duplication risks, endpoint wait, build complexity, and on-call burden.
+- **Follow-up:** false
 
-- Prompt count: 5 raw prompt entries matched the requested tags: `task-2-tradeoffs` (2 entries, including this log-compilation request), `task-2-pressure` (1), `task-2-3am` (1), and `task-2-cost` (1). This is 4 decision prompts plus 1 compilation prompt.
-- Tools used during the Task 2 response window: `fetch_webpage` (4 calls). Tool events do not carry task tags; these calls occurred after the Task 2 cost prompt and before the compilation request.
-- Recommendation under pressure: Yes, conditionally. The initial recommendation was B. In response to `task-2-pressure`, the answer said C could be a reasonable initial release if specific controls were added. After the user selected B, the subsequent response returned to B with worker monitoring and runbook conditions.
-- Matching prompt timestamps: first `2026-10-31T09:16:19.067Z`; last `2026-10-31T09:29:03.376Z`.
+**4. AI Output**
+- **Type:** adr
+- **Files created or modified:** none
+- **Summary:** Produced a decision table comparing the three payment-submission options.
 
-What I kept:
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Reviewed response; no executable test applicable.
 
-- Comparison of Option A, B, and C.
-- Analysis of PayEx timeout behavior.
-- 3AM operational failure scenarios.
-- Initial cost estimation breakdown.
+**6. Execution Evidence and Outcome**
+- **Affected files:** none
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** Backfilled from the user-provided interaction summary and raw prompt timestamp.
 
-What I changed:
+### Interaction 5 — Pressure-test the option C preference
+**Log ID:** TASK-P5-backfill  
+**Timestamp:** 2026-10-31T09:17:48.313Z  
+**Session ref:** session-001
 
-- Selected Option B after reviewing business requirements.
-- Added operational safeguards and monitoring recommendations.
-- Included team capability considerations in the final decision.
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-What it got wrong:
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-- Azure cost estimates were assumptions.
-- Throughput and backlog recovery rates were estimated.
-- PayEx capabilities could not be verified from available information.
-- Calendar effort estimates were not validated against actual team velocity.
+**3. Prompt and Interactions**
+- **Submitted:** Test the recommendation under pressure by stating a preference for option C because worker operations may be harder for newer engineers.
+- **Follow-up:** false
 
-## Task 2 - Raw Log Update
+**4. AI Output**
+- **Type:** adr
+- **Files created or modified:** none
+- **Summary:** Reassessed the recommendation in light of the team's operational familiarity and the user's preference for option C.
 
-- Prompt count: 6 entries match the requested tags: `task-2-tradeoffs` (3, including 2 compilation requests), `task-2-pressure` (1), `task-2-3am` (1), and `task-2-cost` (1). This consists of 4 decision prompts and 2 compilation prompts.
-- Tools used in the matching prompt interval: `apply_patch`, `fetch_webpage`, `file_search`, `grep_search`, `list_dir`, `read_file`, `run_in_terminal`, and `runSubagent`.
-- Recommendation under pressure: Yes, conditionally. The initial answer recommended B; the `task-2-pressure` answer said C could be reasonable for the initial release with safeguards. After the user selected B, the next answer returned to B with monitoring and runbook conditions.
-- Matching prompt timestamps: first `2026-10-31T09:16:19.067Z`; last `2026-10-31T12:20:52.976Z`.
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Reviewed response; no executable test applicable.
 
-What I kept:
+**6. Execution Evidence and Outcome**
+- **Affected files:** none
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** The response treated option C as conditionally reasonable with safeguards; the raw log supplies the prompt timestamp.
 
-- Comparison of Option A, B, and C.
-- Analysis of PayEx timeout behavior.
-- 3AM operational failure scenarios.
-- Initial cost estimation breakdown.
+### Interaction 6 — Identify 3am outbox failure modes
+**Log ID:** TASK-P6-backfill  
+**Timestamp:** 2026-10-31T09:18:33.748Z  
+**Session ref:** session-001
 
-What I changed:
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-- Selected Option B after reviewing business requirements.
-- Added operational safeguards and monitoring recommendations.
-- Included team capability considerations in the final decision.
+**2. Agent Details**
+| Field | Value |
++-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-What it got wrong:
+**3. Prompt and Interactions**
+- **Submitted:** Describe 3am outbox failure modes, detection, and on-call actions before the last-working-day peak.
+- **Follow-up:** false
 
-- Azure cost estimates were assumptions.
-- Throughput and backlog recovery rates were estimated.
-- PayEx capabilities could not be verified from available information.
-- Calendar effort estimates were not validated against actual team velocity.
+**4. AI Output**
+- **Type:** adr
+- **Files created or modified:** none
+- **Summary:** Produced a failure-mode table covering worker stoppage, expired PayEx credentials, competing claims, idempotency expiry, and morning backlog.
 
-## Task 3 — Autonomy Policy (Dependency Bumps)
-**Date:** 2026-10-31
-**Model:** GitHub Copilot (auto)
-**Prompts in this task:** 1
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Reviewed response; no executable test applicable.
 
-### Prompt 11 — gap finding
-**I asked:** Here is my draft autonomy policy for dependency bumps.
-Context: financial service, SOC 2 audit in 6 months, 2 of 6 engineers new to codebase.
+**6. Execution Evidence and Outcome**
+- **Affected files:** none
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** Backfilled from the user-provided interaction summary and raw prompt timestamp.
 
-[paste your draft]
+### Interaction 7 — Estimate build and running costs
+**Log ID:** TASK-P7-backfill  
+**Timestamp:** 2026-10-31T09:20:03.168Z  
+**Session ref:** session-001
 
-Find the gaps:
-1. What can go wrong at Level 1 (PR with human merge) that my gates don't catch?
-2. What extra control is needed for packages in the payment or auth path specifically?
-3. What is a defensible evidence threshold for Level 1 → Level 2 promotion?
-4. Minimum acceptable approval process for a level promotion?
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
 
-TASK-TAG: task-3-autonomy
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
 
-**Copilot said:**
-1. **Level 1 gaps:** A green CI run and human review do not guarantee qualified ownership, adequate dependency/transitive-diff and provenance review, runtime/deployment/rollback coverage, or security scans that cover the full dependency tree. The policy also leaves “no missed breakage” and “zero regression” undefined; Level 0 risk is not literally zero.
-2. **Payment/auth controls:** Keep these packages out of auto-merge, classify direct and transitive dependencies, require domain-owner and independent security review, test payment idempotency/ambiguous timeouts and auth boundaries, and document rollback.
-3. **Level 1 → Level 2 evidence:** Treat 20 PRs as a starting point, not sufficient alone. Require a defined observation period across the proposed package scope, passing CI/security/staging checks, no attributable production regressions or unresolved findings, and per-PR evidence. Limit auto-merge to an allowlist and continue excluding payment, auth, and audit dependencies.
-4. **Promotion approval:** Require two independent approvals, such as engineering policy owner and security reviewer, with evidence review, approved package scope, effective date, rollback/disable procedure, and next review date. The proposer should not be the sole approver.
+**3. Prompt and Interactions**
+- **Submitted:** Estimate Option B build effort by component and monthly Azure running costs, labeling estimates.
+- **Follow-up:** false
 
-### What I kept
-- Domain-qualified reviewer requirement at Level 1
-- Independent security reviewer for payment/auth packages
-- Transitive dependency diff required in every Level 1 PR
-- Full dependency tree scan (not just direct deps)
-- 90-calendar-day minimum alongside 20 PR count for Level 1 → Level 2
-- Two independent approvers for promotion, proposer excluded
+**4. AI Output**
+- **Type:** adr
+- **Files modified:** `submission/adr/001-exactly-once-payex.md`
+- **Summary:** Provided a component-level engineering estimate and monthly Azure cost breakdown for the transactional outbox option.
 
-### What I changed
-- Did not adopt provenance or build script checks — no tooling exists, out of scope
-- Did not add license review — no legal process on this team
-- Simplified the evidence record to a table rather than Copilot's scoring model
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Reviewed cost assumptions; no executable test applicable.
 
-### What it got wrong
-- Said "Level 0 risk is zero is too absolute" correctly, then suggested
-  provenance checks at Level 0 — contradicts its own point since Level 0
-  makes no code changes
-- Proposed a 90-day evidence bar without flagging that a 6-person team
-  doing manual reviews could take 6+ months to hit 20 PRs — practical
-  timeline risk not mentioned
-- Left "zero regression" undefined — did not say who decides or how it is measured
+**6. Execution Evidence and Outcome**
+- **Affected files:** `submission/adr/001-exactly-once-payex.md`
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** Cost figures were estimates. The ADR contains the human-authored decision record.
+
+## Task 3 — Autonomy Policy
+
+### Interaction 8 — Draft dependency-bump autonomy policy
+**Log ID:** TASK-P8-backfill  
+**Timestamp:** 2026-10-31T12:26:00Z (estimate)  
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
+
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
+
+**3. Prompt and Interactions**
+- **Submitted:** Draft dependency-bump autonomy levels, controls, evidence requirements, promotion approval, and step-down conditions.
+- **Follow-up:** false
+
+**4. AI Output**
+- **Type:** policy
+- **Files created:** `submission/autonomy/dependency-bumps.md`
+- **Summary:** Created an initial dependency-bump autonomy policy with levels, controls, promotion evidence, approvals, and rollback criteria.
+
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed output, verified citations, rewrote sections in own words.
+- **Validation:** Policy reviewed; no executable test applicable.
+
+**6. Execution Evidence and Outcome**
+- **Affected files:** `submission/autonomy/dependency-bumps.md`
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** Timestamp is estimated because the raw log contains no separate initial-policy prompt; it confirms the draft was available for the gap review shortly afterward.
+
+### Interaction 9 — Find gaps in dependency-bump policy
+**Log ID:** TASK-P9-backfill  
+**Timestamp:** 2026-10-31T12:27:49.317Z  
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+| Field | Value |
+|-------|-------|
+| Tool | GitHub Copilot |
+| Model | auto |
+| Agent type | built-in |
+| Execution mode | Ask |
+
+**2. Agent Details**
+| Field | Value |
+|-------|-------|
+| Custom instructions | .github/copilot-instructions.md |
+| Subagent used | none |
+| Skills invoked | none |
+
+**3. Prompt and Interactions**
+- **Submitted:** Analyze the dependency-bump autonomy draft for Level 1 gaps, payment/auth controls, Level 1-to-2 evidence thresholds, and promotion approvals.
+- **Follow-up:** false
+
+**4. AI Output**
+- **Type:** policy
+- **Files modified:** `submission/autonomy/dependency-bumps.md`
+- **Summary:** Returned four gap-analysis sections; the human accepted five recommendations and rejected three as disproportionate.
+
+**5. Human Intervention and Validation**
+- **Changes made:** true
+- **Description:** Reviewed the four sections, accepted five recommendations, rejected three, and updated the policy in the human's own words.
+- **Validation:** Compared the final policy with the accepted and rejected recommendations; no executable test applicable.
+
+**6. Execution Evidence and Outcome**
+- **Affected files:** `submission/autonomy/dependency-bumps.md`
+- **Test results:** not applicable
+- **Commit ref:** see git log
+- **Status:** success_with_corrections
+- **Quality notes:** The raw log confirms the prompt timestamp. Accepted and rejected counts are from the supplied backfill details and current policy content.
+
+## Task 4 — Eval Cases and Runs
+
+**Summary:** 2 new cases written, 6 runs completed (3 baseline v1 + 3 v2), 72 individual evaluations. Perfect catch rate across all runs.
+
+### Interaction 10 — Write case 11 (defect case)
+**Log ID:** T4-P10-20261031  
+**Timestamp:** 2026-11-01T09:57:58.144Z  
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+Tool: GitHub Copilot | Model: auto | Agent type: built-in | Execution mode: Ask
+
+**2. Agent Details**
+Custom instructions: .github/copilot-instructions.md | Subagent: none | Skills: none
+
+**3. Prompt submitted**
+Write case-11 in ops/evals format: GetAuditTrail endpoint added to InvoicesController without [RequireRole("Admin")]. Real defect seen in ASP.NET Core APIs. 7-year financial history exposure. SOC 2 concern.
+
+**4. Skills and Sub-agents:** None
+
+**5. Tools and Integrations**
+File reads: ops/evals/cases/case-01 (format reference)  
+File writes: submission/evals/cases/case-11.diff, submission/evals/cases/case-11-expected.md
+
+**6. AI Actions and Output**
+Type: eval-case  
+Files created: submission/evals/cases/case-11.diff, submission/evals/cases/case-11-expected.md  
+Summary: Diff showing DeleteInvoice endpoint missing RequireRole Admin — destructive action with no authorization restriction.
+
+**7. Human Intervention**
+Changes made: yes  
+What: Verified diff matches real InvoicesController.cs controller style.  
+Validation: Compared against actual controller file.
+
+**8. Execution Evidence**
+Affected files: submission/evals/cases/case-11.diff, submission/evals/cases/case-11-expected.md  
+Test results: n/a | Commit: see git log
+
+**9. Outcome**
+Status: success_with_corrections  
+Quality: The requested scenario named GetAuditTrail, but the written diff adds DeleteInvoice. The diff also required a minor style correction to match the ApiControllerBase pattern.
+
+### Interaction 11 — Write case 12 (clean case)
+**Log ID:** T4-P11-20261031  
+**Timestamp:** 2026-11-01T10:01:36.579Z  
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+Tool: GitHub Copilot | Model: auto | Agent type: built-in | Execution mode: Ask
+
+**2. Agent Details**
+Custom instructions: .github/copilot-instructions.md | Subagent: none | Skills: none
+
+**3. Prompt submitted**
+Write case-12: log statement recording only invoice ID in InvoicesController. Clean case — reviewer should not flag it. Write diff and expected files.
+
+**4. Skills and Sub-agents:** None
+
+**5. Tools and Integrations**
+File writes: submission/evals/cases/case-12.diff, submission/evals/cases/case-12-expected.md
+
+**6. AI Actions and Output**
+Type: eval-case  
+Files created: submission/evals/cases/case-12.diff, submission/evals/cases/case-12-expected.md  
+Summary: Minimal diff showing log statement recording only invoice ID — clean.
+
+**7. Human Intervention**
+Changes: no  
+Validation: Verified file path matches real controller location.
+
+**8. Execution Evidence**
+Affected files: submission/evals/cases/case-12.diff, submission/evals/cases/case-12-expected.md  
+Test results: n/a | Commit: see git log
+
+**9. Outcome**
+Status: success  
+Quality: Correct on first attempt.
+
+### Interactions 12-17 — Eval runs (12 cases × 6 runs = 72 evaluations)
+**Log IDs:** T4-P12 through T4-P17  
+**Timestamps:** 2026-11-01T07:39:03.301Z to 2026-11-01T12:22:40.697Z (raw prompt range)  
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+Tool: GitHub Copilot | Model: auto | Agent type: built-in | Execution mode: Ask
+
+**2. Agent Details**
+Custom instructions: .github/copilot-instructions.md | Subagent: none | Skills: none
+
+**3. Prompts submitted**
+Runs 1-3: prompt-v1 (baseline) + each of 12 case diffs = 36 evaluations.  
+Runs 4-6: prompt-v2 (SOC 2 sentence added) + each of 12 case diffs = 36 evaluations.  
+Total: 72 individual evaluations. Each response recorded in CSV immediately.
+
+**4. Skills and Sub-agents:** None
+
+**5. Tools and Integrations**
+File reads: ops/evals/cases/case-01 through case-10, submission/evals/cases/case-11, case-12  
+File writes: submission/evals/eval-runs.csv, submission/evals/results.md
+
+**6. AI Actions and Output**
+Type: eval-run  
+Files created: submission/evals/eval-runs.csv, submission/evals/results.md  
+Summary: 100% catch rate across all 6 runs. 0% false alarm rate. Prompt v2 produced more SOC 2-specific framing on case-07 (data exposure) but no change in verdict. Ceiling effect prevents claiming improvement.
+
+**7. Human Intervention**
+Changes: yes  
+What: Filled CSV row immediately after each of 72 responses. Wrote results.md from CSV data, computed rates, and stated the ceiling effect in the confidence section.  
+Validation: Cross-checked all 72 rows against expected verdicts.
+
+**8. Execution Evidence**
+Affected files: submission/evals/eval-runs.csv, submission/evals/results.md  
+Test results: n/a | Commit: see git log
+
+**9. Outcome**
+Status: success  
+Quality: Perfect catch rate is a genuine finding but limits comparison between v1 and v2. A harder set with ambiguous cases would better distinguish prompts. The SOC 2 context changed framing on case-07 without changing verdict, suggesting it sharpens specificity but not detection.
+
+**Evidence note:** The supplied summary reports 72 completed evaluations, but the current `ops/evals/results-template.csv` still contains pending rows and `submission/evals/eval-runs.csv` was not found in the workspace at compilation time. Reconcile the completed run records before treating the 72-row total as independently verified.

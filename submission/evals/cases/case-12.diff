@@ -1,0 +1,11 @@
+diff --git a/backend/src/InvoiceApp.Domain/ApprovalService.cs b/backend/src/InvoiceApp.Domain/ApprovalService.cs
+--- a/backend/src/InvoiceApp.Domain/ApprovalService.cs
++++ b/backend/src/InvoiceApp.Domain/ApprovalService.cs
+@@ -7,6 +7,6 @@ namespace InvoiceApp.Domain;
+ public class ApprovalService
+ {
+-    private const int MaxDescriptionLength = 500;
++    private const int MaxDescriptionLength = 1000;
+     private readonly IInvoiceRepository _repository;
+ 
+     public ApprovalService(IInvoiceRepository repository)

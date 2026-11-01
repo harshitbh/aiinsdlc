@@ -1,0 +1,8 @@
+diff --git a/backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs b/backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs
+
++ [HttpDelete("{id}")]
++ public IActionResult DeleteInvoice(string id)
++ {
++     _approvalService.Delete(id);
++     return NoContent();
++ }
