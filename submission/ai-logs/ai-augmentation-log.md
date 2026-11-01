@@ -16,8 +16,10 @@
 | Task 1 — Diagrams + Arch Test | 3 | 2026-10-31T09:00:00Z | 2026-10-31T09:14:00Z | success_with_corrections |
 | Task 2 — Decision Record | 4 | 2026-10-31T09:16:19Z | 2026-10-31T09:20:03Z | success_with_corrections |
 | Task 3 — Autonomy Policy | 2 | 2026-10-31T12:26:00Z | 2026-10-31T12:27:49Z | success_with_corrections |
-| Task 4 — Eval Cases + Runs | pending | — | — | — |
-| Task 5 — Risk + Metrics | pending | — | — | — |
+| Task 4 — Eval Cases + Runs |  5 | 2026-10-31T15:26:00Z | 2026-10-31T15:27:49Z | 
+success_with_corrections |
+| Task 5 — Risk + Metrics |  2 | 2026-10-31T16:26:00Z | 2026-10-31T16:27:49Z | 
+success_with_corrections |
 
 ---
 
