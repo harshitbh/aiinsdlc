@@ -1,7 +1,7 @@
 # Autonomy Policy: Dependency Bumps
 
 **Workflow:** Automated dependency version bumps  
-**Author:** [your name]  
+**Author:** [Harshit Bhargava]  
 **Date:** 2026-10-31  
 **Day-one level:** Level 0 — Suggest only  
 

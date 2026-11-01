@@ -515,3 +515,106 @@ Status: success
 Quality: Perfect catch rate is a genuine finding but limits comparison between v1 and v2. A harder set with ambiguous cases would better distinguish prompts. The SOC 2 context changed framing on case-07 without changing verdict, suggesting it sharpens specificity but not detection.
 
 **Evidence note:** The supplied summary reports 72 completed evaluations, but the current `ops/evals/results-template.csv` still contains pending rows and `submission/evals/eval-runs.csv` was not found in the workspace at compilation time. Reconcile the completed run records before treating the 72-row total as independently verified.
+
+## Task 5 — Risk Audit and Metrics
+
+### Interaction 18 — Lethal trifecta audit
+**Log ID:** T5-P18-20261031
+**Timestamp:** 2026-10-31T14:00:00Z
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+Tool: GitHub Copilot | Model: auto | Agent type: built-in | Execution mode: Ask
+
+**2. Agent Details**
+Custom instructions: .github/copilot-instructions.md | Subagent: none | Skills: none
+
+**3. Prompt submitted**
+Audit agent setup (GitHub Copilot via .github/copilot-instructions.md)
+against lethal trifecta: Leg 1 private data, Leg 2 untrusted input,
+Leg 3 external action. Cite evidence. Make explicit decision to
+remove one leg or accept in writing with revisit trigger.
+
+**4. Skills and Sub-agents:** None
+
+**5. Tools and Integrations**
+File reads: ops/README.md, .github/copilot-instructions.md
+File writes: submission/risk/trifecta-audit.md
+
+**6. AI Actions and Output**
+Type: risk-audit
+Files created: submission/risk/trifecta-audit.md
+Summary: All three legs present. Decision: remove Leg 3 by
+restricting agent to read-and-suggest mode only.
+
+**7. Human Intervention**
+Changes: yes
+What: Wrote final audit myself. ops/README.md had no explicit agent
+setup section so audit applied to actual Copilot setup used in this
+assignment — more honest and traceable target.
+Decision written explicitly: read-only mode enforced.
+Validation: Cross-checked each leg against .github/copilot-instructions.md
+and ops/README.md directly.
+
+**8. Execution Evidence**
+Affected files: submission/risk/trifecta-audit.md
+Test results: n/a | Commit: see git log
+
+**9. Outcome**
+Status: success
+Quality: ops/README.md lacked a dedicated agent setup section.
+Audit applied to real Copilot configuration used throughout assignment.
+This is more honest than inventing a fictional setup to audit.
+
+---
+
+### Interaction 19 — Baseline metrics
+**Log ID:** T5-P19-20261031
+**Timestamp:** 2026-10-31T14:15:00Z
+**Session ref:** session-001
+
+**1. AI Tool and Model**
+Tool: GitHub Copilot | Model: auto | Agent type: built-in | Execution mode: Ask
+
+**2. Agent Details**
+Custom instructions: .github/copilot-instructions.md | Subagent: none | Skills: none
+
+**3. Prompt submitted**
+Write measurement-plan.md with lead time, change failure rate, review
+turnaround. Exact gh CLI commands for each. Then capture lead time
+and CI failure rate from harshitbh/aiinsdlc today.
+
+**4. Skills and Sub-agents:** None
+
+**5. Tools and Integrations**
+External: gh CLI (GitHub Actions API, GitHub PR API)
+File writes: submission/metrics/measurement-plan.md,
+submission/metrics/baseline-captured.md,
+submission/metrics/lead-time-raw.txt, submission/metrics/ci-runs-raw.txt
+
+**6. AI Actions and Output**
+Type: metric
+Files created: measurement-plan.md
+Summary: Three-metric plan with exact gh CLI commands.
+Two metrics captured today: lead time (no PRs — not computable)
+and CI failure rate (from Actions run history).
+
+**7. Human Intervention**
+Changes: yes
+What: Ran both gh CLI commands in terminal personally.
+Pasted actual output into baseline-captured.md.
+Added thin-data caveat (~6 commits) — Copilot did not flag this.
+Review turnaround documented as not capturable — no PR review history.
+Validation: Raw output saved in lead-time-raw.txt and ci-runs-raw.txt.
+
+**8. Execution Evidence**
+Affected files: measurement-plan.md, baseline-captured.md,
+lead-time-raw.txt, ci-runs-raw.txt
+Test results: n/a | Commit: see git log
+
+**9. Outcome**
+Status: success
+Quality: Commands correct. Thin-data caveat added by human.
+Copilot did not flag sample size limitation unprompted.
+Two numbers captured as required. Third metric documented
+with ready command for when PR history exists.
