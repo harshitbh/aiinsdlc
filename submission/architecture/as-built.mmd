@@ -5,10 +5,10 @@ graph TD
     ApprovalService["ApprovalService<br/>ApprovalService.cs:7; ApprovalService.cs:16; ApprovalService.cs:31; ApprovalService.cs:43"]
     Repository["IInvoiceRepository<br/>IInvoiceRepository.cs:3; IInvoiceRepository.cs:6; IInvoiceRepository.cs:9<br/>Registered as InMemoryInvoiceRepository<br/>Program.cs:14"]
 
-    Host -->|AddControllers() and MapControllers() [Program.cs:9; Program.cs:22]| InvoicesController
-    Host -->|AddControllers() and MapControllers() [Program.cs:9; Program.cs:22]| ApprovalsController
-    Host -->|AddScoped<ApprovalService>() [Program.cs:15]| ApprovalService
-    Host -->|AddSingleton<IInvoiceRepository, InMemoryInvoiceRepository>() [Program.cs:14]| Repository
-    InvoicesController -->|_approvals.Submit(id) [InvoicesController.cs:70]| ApprovalService
-    ApprovalsController -->|_approvals.Approve(...) [ApprovalsController.cs:22-23]; _approvals.Reject(...) [ApprovalsController.cs:26-27]| ApprovalService
-    ApprovalService -->|GetById(invoiceId) [ApprovalService.cs:62]; Update(invoice) [ApprovalService.cs:27; ApprovalService.cs:39; ApprovalService.cs:57]| Repository
+    Host -->|AddControllers and MapControllers; Program.cs 9,22| InvoicesController
+    Host -->|AddControllers and MapControllers; Program.cs 9,22| ApprovalsController
+    Host -->|AddScoped ApprovalService; Program.cs 15| ApprovalService
+    Host -->|AddSingleton IInvoiceRepository to InMemoryInvoiceRepository; Program.cs 14| Repository
+    InvoicesController -->|Submit call; InvoicesController.cs 70| ApprovalService
+    ApprovalsController -->|Approve and Reject calls; ApprovalsController.cs 22-27| ApprovalService
+    ApprovalService -->|GetById and Update calls; ApprovalService.cs 27,39,57,62; IInvoiceRepository.cs 6,9| Repository
