@@ -1,11 +1,24 @@
-diff --git a/backend/src/InvoiceApp.Domain/ApprovalService.cs b/backend/src/InvoiceApp.Domain/ApprovalService.cs
---- a/backend/src/InvoiceApp.Domain/ApprovalService.cs
-+++ b/backend/src/InvoiceApp.Domain/ApprovalService.cs
-@@ -7,6 +7,6 @@ namespace InvoiceApp.Domain;
- public class ApprovalService
+diff --git a/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs b/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs
+--- a/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs
++++ b/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs
+@@ -11,9 +11,12 @@ public class InvoicesController : ApiControllerBase
  {
--    private const int MaxDescriptionLength = 500;
-+    private const int MaxDescriptionLength = 1000;
      private readonly IInvoiceRepository _repository;
+     private readonly ApprovalService _approvals;
++    private readonly ILogger<InvoicesController> _logger;
  
-     public ApprovalService(IInvoiceRepository repository)
+-    public InvoicesController(IInvoiceRepository repository, ApprovalService approvals)
++    public InvoicesController(IInvoiceRepository repository, ApprovalService approvals, ILogger<InvoicesController> logger)
+     {
+         _repository = repository;
+         _approvals = approvals;
++        _logger = logger;
+     }
+@@ -70,2 +70,6 @@ public class InvoicesController : ApiControllerBase
+     [HttpPost("{id}/submit")]
+-    public ActionResult<Invoice> Submit(string id) => Handle(() => _approvals.Submit(id));
++    public ActionResult<Invoice> Submit(string id)
++    {
++        _logger.LogInformation("Invoice submit requested for {InvoiceId}", id);
++        return Handle(() => _approvals.Submit(id));
++    }

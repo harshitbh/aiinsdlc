@@ -1,29 +1,66 @@
-graph TD
-    Host["ASP.NET Core app host<br/>Program.cs:6; Program.cs:17; Program.cs:24"]
-    InvoicesController["InvoicesController<br/>InvoicesController.cs:9; InvoicesController.cs:70"]
-    ApprovalsController["ApprovalsController<br/>ApprovalsController.cs:10; ApprovalsController.cs:22; ApprovalsController.cs:26"]
-    ApprovalService["ApprovalService<br/>ApprovalService.cs:7; ApprovalService.cs:16; ApprovalService.cs:31; ApprovalService.cs:43"]
-    Repository["IInvoiceRepository<br/>IInvoiceRepository.cs:3; IInvoiceRepository.cs:6; IInvoiceRepository.cs:9<br/>registered as InMemoryInvoiceRepository<br/>Program.cs:14"]
+flowchart LR
+    subgraph Exists[Exists today]
+        User[Approver or Admin]
+        UI[Static web UI<br/>app.js]
+        Controllers[InvoiceApp.Api controllers]
+        Service[ApprovalService]
+    end
 
-    Host -->|AddControllers() and MapControllers() [Program.cs:9; Program.cs:22]| InvoicesController
-    Host -->|AddControllers() and MapControllers() [Program.cs:9; Program.cs:22]| ApprovalsController
-    Host -->|AddScoped<ApprovalService>() [Program.cs:15]| ApprovalService
-    Host -->|AddSingleton<IInvoiceRepository, InMemoryInvoiceRepository>() [Program.cs:14]| Repository
-    InvoicesController -->|_approvals.Submit(id) [InvoicesController.cs:70]| ApprovalService
-    ApprovalsController -->|_approvals.Approve(...) [ApprovalsController.cs:22-23]; _approvals.Reject(...) [ApprovalsController.cs:26-27]| ApprovalService
-    ApprovalService -->|GetById(invoiceId) [ApprovalService.cs:62]; Update(invoice) [ApprovalService.cs:27; ApprovalService.cs:39; ApprovalService.cs:57]| Repository
+    subgraph Changing[Exists and changes planned]
+        AppService[Azure App Service<br/>3 instances]
+        CurrentSessions[In-memory SessionStore]
+        CurrentRepo[InMemoryInvoiceRepository]
+    end
 
-    AzureSQL["Azure SQL<br/>target replacement for InMemoryInvoiceRepository"]:::notBuilt
-    PaymentSubmissionOutbox["PaymentSubmission outbox table<br/>written atomically with approval"]:::notBuilt
-    Dispatcher["Dispatcher BackgroundService<br/>polls outbox"]:::notBuilt
-    PayEx["PayEx HTTP API<br/>30s timeout; outcome ambiguous on timeout"]:::notBuilt
-    SharedSessionStore["Shared session store<br/>replaces in-memory sessions; shared across 3 App Service instances"]:::notBuilt
+    subgraph Planned[Planned / not built]
+        SharedSessions[Shared session store]
+        SqlRepo[SqlInvoiceRepository]
+        SQL[Azure SQL]
+        Outbox[PaymentSubmission outbox table]
+        Audit[ApprovalAudit table]
+        Dispatcher[Dispatcher BackgroundService]
+        Vault[Key Vault]
+        Insights[Application Insights]
+        Reconcile[Daily Reconciliation process]
+    end
 
-    Repository -.->|target implementation replaces in-memory repository| AzureSQL
-    ApprovalService -.->|write outbox item atomically with approval| PaymentSubmissionOutbox
-    AzureSQL -.->|contains table| PaymentSubmissionOutbox
-    Dispatcher -.->|polls| PaymentSubmissionOutbox
-    Dispatcher -.->|HTTP request; 30s timeout; timeout outcome is ambiguous| PayEx
-    Host -.->|shared session state across instances| SharedSessionStore
+    subgraph Provisioned[Provisioned but not used]
+        Bus[Azure Service Bus]
+    end
 
-    classDef notBuilt stroke-dasharray:5 5,fill:#fff3cd
+    subgraph External[External]
+        PayEx[PayEx API]
+        Finance[Finance team]
+    end
+
+    User --> UI
+    UI -->|HTTP requests| AppService
+    AppService --> Controllers
+    Controllers --> Service
+    Service --> SqlRepo
+    SqlRepo -->|transaction: invoice, audit, outbox| SQL
+    SQL -->|contains| Outbox
+    Outbox -->|poll and lease claims| Dispatcher
+    Dispatcher -->|load API secret| Vault
+    Dispatcher -->|payment request, stable idempotency key| PayEx
+    Dispatcher -->|heartbeat, attempts, outcomes, backlog| Insights
+    Reconcile -->|read invoice, audit, outbox state| SQL
+    Reconcile -->|compare payment status| PayEx
+    Reconcile -->|unresolved exceptions and daily report| Finance
+
+    AppService -.->|replace per-process sessions| SharedSessions
+    SharedSessions -.-> AppService
+    CurrentSessions -.->|replaced by| SharedSessions
+    CurrentRepo -.->|replaced by| SqlRepo
+
+    classDef exists fill:#d9ead3,stroke:#38761d,color:#000
+    classDef changing fill:#fff2cc,stroke:#bf9000,color:#000
+    classDef planned fill:#fce5cd,stroke:#e69138,stroke-dasharray:5 5,color:#000
+    classDef provisioned fill:#d9d2e9,stroke:#674ea7,color:#000
+    classDef external fill:#d9eaf7,stroke:#3d85c6,color:#000
+
+    class User,UI,Controllers,Service exists
+    class AppService,CurrentSessions,CurrentRepo changing
+    class SharedSessions,SqlRepo,SQL,Outbox,Audit,Dispatcher,Vault,Insights,Reconcile planned
+    class Bus provisioned
+    class PayEx,Finance external

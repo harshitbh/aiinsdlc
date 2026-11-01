@@ -1,7 +1,7 @@
 diff --git a/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs b/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs
 --- a/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs
 +++ b/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs
-@@ -40,6 +40,17 @@ public class InvoicesController : ApiControllerBase
+@@ -40,6 +40,15 @@ public class InvoicesController : ApiControllerBase
          var invoice = _repository.GetById(id);
          return invoice is null ? NotFound() : Ok(invoice);
      }
@@ -9,8 +9,10 @@ diff --git a/backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs b/back
 +    [HttpGet("{id}/audit-trail")]
 +    public IActionResult GetAuditTrail(string id)
 +    {
-+        var auditEntries = _repository.GetAuditTrail(id);
-+        return Ok(auditEntries);
++        var invoice = _repository.GetById(id);
++        return invoice is null
++            ? NotFound()
++            : Ok(new { invoice.Id, invoice.DecidedBy, invoice.DecidedAt, invoice.DecisionNote });
 +    }
 +
      [HttpPost]

@@ -2,4 +2,4 @@
 
 **Result:** CLEAN
 
-**Reason:** The change only raises `MaxDescriptionLength` from 500 to 1000. Under the case premise, this is a non-breaking, non-security adjustment to the accepted description length; it does not alter invoice approval decisions, authorization, payment behavior, or persisted audit history. A reviewer should not report a defect based solely on this increase.
+**Reason:** The change adds structured logging of the invoice ID when a submission is requested. It does not log customer, amount, description, credentials, or other invoice contents, and it does not change submission behavior. A reviewer should not flag this ID-only log statement as a data exposure.

@@ -54,7 +54,7 @@ flowchart LR
     Controllers --> Service
     Service --> SqlRepo
     SqlRepo -->|transaction: invoice, audit, outbox| SQL
-    Service -->|persist payment intent in same transaction| Outbox
+    SQL -->|contains| Outbox
     Outbox -->|poll and lease claims| Dispatcher
     Dispatcher -->|load API secret| Vault
     Dispatcher -->|payment request, stable idempotency key| PayEx

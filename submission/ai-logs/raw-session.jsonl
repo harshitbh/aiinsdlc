@@ -556,3 +556,148 @@
 {"ts":"2026-11-01T14:29:12.064Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
 {"ts":"2026-11-01T14:29:18.195Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $f='submission\\ai-logs\\raw-session.jsonl'; Get-Content $f -Tail 8 | ForEach-Object { if($_.Length -gt 1200){ $_.Substring(0,1200) } else { $_ } }"}
 {"ts":"2026-11-01T14:29:18.173Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $f='submission\\ai-logs\\completed-entries.jsonl'; Get-Content $f -Tail 12 | ForEach-Object { if($_.Length -gt 1200){ $_.Substring(0,1200) } else { $_ } }"}
+{"ts":"2026-11-01T14:29:20.665Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:29:22.737Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:29:24.190Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:29:25.877Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:29:56.409Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: Get-ChildItem 'ops\\evals\\cases' -Filter '*.diff' | Sort-Object Name | ForEach-Object { Write-Output \"--- $($_.Name)\"; Select-String -Path $_.FullName -Pattern '^diff --git|^@@|^\\+[^+]|^-\\S' | Select-Object -First 9 | ForEach-Object { $_.Line } }"}
+{"ts":"2026-11-01T14:29:56.407Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $f='submission\\risk\\trifecta-audit.md'; Get-Content $f; Write-Output '--- ops'; Get-Content 'ops\\README.md'"}
+{"ts":"2026-11-01T14:29:58.599Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:29:59.651Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:30:00.443Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:30:24.903Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\prompt-v2.md"}
+{"ts":"2026-11-01T14:30:24.944Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:30:24.904Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:30:24.901Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\prompt-v1.md"}
+{"ts":"2026-11-01T14:30:24.922Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $f='backend\\src\\InvoiceApp.Api\\Controllers\\ApprovalsController.cs'; $i=0; Get-Content $f | ForEach-Object { $i++; '{0,4}: {1}' -f $i,$_ }; Write-Output '--- raw count'; $runs=Get-Content 'submission\\metrics\\ci-runs-raw.txt' -Raw | ConvertFrom-Json; \"CI run objects: $($runs.Count); failed: $(($runs | Where-Object conclusion -ne 'success').Count)\""}
+{"ts":"2026-11-01T14:30:25.189Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\cost\\task-2-cost-review.md"}
+{"ts":"2026-11-01T14:30:25.500Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:30:26.090Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\raw-session.jsonl"}
+{"ts":"2026-11-01T14:30:26.475Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"rg"}
+{"ts":"2026-11-01T14:30:27.455Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:30:43.878Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\.github\\copilot-instructions.md"}
+{"ts":"2026-11-01T14:30:43.894Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $items=Get-Content 'submission\\ai-logs\\completed-entries.jsonl'; foreach($line in $items){ try{$x=$line | ConvertFrom-Json; if($x.task -like 'task-4*' -or $x.log_id -like 'T4*'){ [pscustomobject]@{id=$x.log_id; task=$x.task; summary=$x.ai_actions.summary; prompt=$x.prompt.submitted} | ConvertTo-Json -Depth 4 -Compress }}catch{} }"}
+{"ts":"2026-11-01T14:30:43.918Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:30:43.899Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $items=Get-Content 'submission\\ai-logs\\completed-entries.jsonl'; foreach($line in $items){ try{$x=$line | ConvertFrom-Json; if($x.task -eq 'task-2-cost' -or ($x.log_id -like '*cost*')){ $x | ConvertTo-Json -Depth 8 }}catch{} }"}
+{"ts":"2026-11-01T14:30:45.608Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:30:46.321Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:31:05.201Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\backend\\src\\InvoiceApp.Domain\\DiscountCalculator.cs"}
+{"ts":"2026-11-01T14:31:05.225Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:32:15.383Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\approval-sequence.md"}
+{"ts":"2026-11-01T14:32:15.399Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $f='submission\\architecture\\approval-sequence.md'; $lines=Get-Content $f; $lines[75] | ConvertTo-Json -Compress"}
+{"ts":"2026-11-01T14:32:15.406Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:32:16.583Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:32:17.551Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\task-2-3am-analysis.md"}
+{"ts":"2026-11-01T14:32:18.053Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\cost\\task-2-cost-review.md"}
+{"ts":"2026-11-01T14:32:18.173Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"rg"}
+{"ts":"2026-11-01T14:32:35.794Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: @'\nfrom pathlib import Path\np = Path(r'submission\\architecture\\approval-sequence.md')\nfor i, line in enumerate(p.read_text(encoding='utf-8').splitlines(), 1):\n    if i == 78:\n        print(repr(line))\n        print(line.encode('utf-8').hex())\n'@ | python -"}
+{"ts":"2026-11-01T14:32:36.736Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:32:40.153Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\approval-sequence.md"}
+{"ts":"2026-11-01T14:32:40.196Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:32:50.214Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:32:50.251Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:32:56.102Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\task-2-3am-analysis.md"}
+{"ts":"2026-11-01T14:32:56.140Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:33:02.311Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\cost\\task-2-cost-review.md"}
+{"ts":"2026-11-01T14:33:02.353Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:33:40.408Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-11.diff"}
+{"ts":"2026-11-01T14:33:40.432Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-11-expected.md"}
+{"ts":"2026-11-01T14:33:40.481Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-12-expected.md"}
+{"ts":"2026-11-01T14:33:40.499Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:33:40.452Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-12.diff"}
+{"ts":"2026-11-01T14:33:47.862Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-12.diff"}
+{"ts":"2026-11-01T14:33:47.878Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:34:05.481Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-12.diff"}
+{"ts":"2026-11-01T14:34:05.505Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\results.md"}
+{"ts":"2026-11-01T14:34:05.527Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:34:12.104Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\lead-time-raw.txt"}
+{"ts":"2026-11-01T14:34:12.100Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\ci-runs-raw.txt"}
+{"ts":"2026-11-01T14:34:12.739Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:34:14.012Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:34:15.057Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:34:20.215Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\measurement-plan.md"}
+{"ts":"2026-11-01T14:34:20.256Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:34:30.885Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\measurement-plan.md"}
+{"ts":"2026-11-01T14:34:31.150Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\baseline-captured.md"}
+{"ts":"2026-11-01T14:34:31.408Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:34:41.417Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $files=@('.github\\copilot-instructions.md','ops\\README.md'); foreach($f in $files){Write-Output \"--- $f\"; $i=0; Get-Content $f | ForEach-Object {$i++; '{0,4}: {1}' -f $i,$_}}"}
+{"ts":"2026-11-01T14:34:42.917Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:34:49.088Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\trifecta-audit.md"}
+{"ts":"2026-11-01T14:34:49.162Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:34:59.393Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\trifecta-audit.md"}
+{"ts":"2026-11-01T14:34:59.571Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:35:09.704Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:35:09.645Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:35:22.219Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:35:22.298Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:35:35.089Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:35:35.142Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:35:44.160Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\autonomy\\dependency-bumps.md"}
+{"ts":"2026-11-01T14:35:44.206Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:35:48.202Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:35:48.165Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\autonomy\\dependency-bumps.md"}
+{"ts":"2026-11-01T14:35:56.493Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:35:56.421Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\autonomy\\dependency-bumps.md"}
+{"ts":"2026-11-01T14:36:06.694Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: Select-String -Path 'submission\\ai-logs\\raw-session.jsonl' -Pattern 'task-2-tradeoffs|task-2-pressure|task-2-3am|task-2-cost' | ForEach-Object { if($_.Line.Length -gt 2500){ $_.Line.Substring(0,2500) } else { $_.Line } }; Write-Output '--- completed task summaries'; Get-Content 'submission\\ai-logs\\completed-entries.jsonl' | ForEach-Object { try { $x=$_ | ConvertFrom-Json; if($x.task -like 'task-2*'){ '{0} | {1} | {2}' -f $x.log_id,$x.task,$x.ai_output.summary } } catch {} }"}
+{"ts":"2026-11-01T14:36:08.613Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:36:15.657Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: foreach($line in Get-Content 'submission\\ai-logs\\raw-session.jsonl'){ try{$x=$line|ConvertFrom-Json; if($x.event -eq 'prompt' -and $x.task -like 'task-2*'){ $p=$x.prompt; if($p.Length -gt 700){$p=$p.Substring(0,700)}; \"RAW $($x.task): $p\" }}catch{} }; foreach($line in Get-Content 'submission\\ai-logs\\completed-entries.jsonl'){ try{$x=$line|ConvertFrom-Json; if($x.task -like 'task-2*'){ \"ENTRY $($x.task): $($x.ai_output.summary)\" }}catch{} }"}
+{"ts":"2026-11-01T14:36:17.833Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:36:22.070Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:36:22.482Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"rg"}
+{"ts":"2026-11-01T14:36:28.335Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:36:28.355Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:36:36.911Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"session_store_sql"}
+{"ts":"2026-11-01T14:36:40.723Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"session_store_sql"}
+{"ts":"2026-11-01T14:36:57.630Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\target.mmd"}
+{"ts":"2026-11-01T14:36:57.613Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\target-state.md"}
+{"ts":"2026-11-01T14:36:57.690Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:36:57.650Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\.github\\workflows\\ci.yml"}
+{"ts":"2026-11-01T14:36:57.668Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:36:59.627Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:37:00.470Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:37:01.093Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:37:18.459Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:37:18.522Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\target-state.md"}
+{"ts":"2026-11-01T14:37:18.596Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\target.mmd"}
+{"ts":"2026-11-01T14:37:18.658Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:37:23.257Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\target-state.md"}
+{"ts":"2026-11-01T14:37:23.267Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:37:30.424Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\architecture\\target.mmd"}
+{"ts":"2026-11-01T14:37:30.451Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:37:51.582Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:37:51.657Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:37:51.622Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:38:12.487Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:38:12.484Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-11.diff"}
+{"ts":"2026-11-01T14:38:12.488Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-12.diff"}
+{"ts":"2026-11-01T14:38:12.493Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\autonomy\\dependency-bumps.md"}
+{"ts":"2026-11-01T14:38:12.489Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\results.md"}
+{"ts":"2026-11-01T14:38:12.491Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Read file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\measurement-plan.md"}
+{"ts":"2026-11-01T14:38:13.025Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:38:13.335Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:38:13.691Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:38:14.144Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"view"}
+{"ts":"2026-11-01T14:38:27.242Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\task-2-3am-analysis.md"}
+{"ts":"2026-11-01T14:38:27.396Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\measurement-plan.md"}
+{"ts":"2026-11-01T14:38:27.295Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\adr\\001-exactly-once-payex.md"}
+{"ts":"2026-11-01T14:38:27.458Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:38:33.205Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\task-2-3am-analysis.md"}
+{"ts":"2026-11-01T14:38:33.302Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:38:42.870Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: git apply --check -- submission/evals/cases/case-11.diff; if ($LASTEXITCODE -eq 0) { 'case-11 patch applies cleanly' }"}
+{"ts":"2026-11-01T14:38:42.877Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: git apply --check -- submission/evals/cases/case-12.diff; if ($LASTEXITCODE -eq 0) { 'case-12 patch applies cleanly' }"}
+{"ts":"2026-11-01T14:38:42.888Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: $p=\"$env:LOCALAPPDATA\\dotnet\\dotnet.exe\"; & $p test backend/InvoiceApp.sln --filter \"Category=Architecture\""}
+{"ts":"2026-11-01T14:38:45.344Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:38:46.568Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:38:47.764Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:38:48.950Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:39:05.701Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:39:12.041Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Run command: foreach($f in @('submission\\evals\\cases\\case-11.diff','submission\\evals\\cases\\case-12.diff')){Write-Output \"--- $f\"; $i=0; Get-Content $f | ForEach-Object {$i++; '{0,3}:>{1}<' -f $i,$_} }"}
+{"ts":"2026-11-01T14:39:13.608Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"powershell"}
+{"ts":"2026-11-01T14:39:29.622Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-11.diff"}
+{"ts":"2026-11-01T14:39:29.646Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\evals\\cases\\case-12.diff"}
+{"ts":"2026-11-01T14:39:29.674Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}
+{"ts":"2026-11-01T14:39:35.704Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\ai-logs\\ai-augmentation-log.md"}
+{"ts":"2026-11-01T14:39:35.793Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\autonomy\\dependency-bumps.md"}
+{"ts":"2026-11-01T14:39:35.919Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\metrics\\measurement-plan.md"}
+{"ts":"2026-11-01T14:39:35.995Z","event":"notification","session":"b1771bd7-df19-4433-862d-5f855a911dde","message":"Edit file: C:\\Users\\harshitbhargava\\harshitbhargava_3217878_aiinsdlc\\submission\\risk\\trifecta-audit.md"}
+{"ts":"2026-11-01T14:39:36.071Z","event":"tool_use","session":"b1771bd7-df19-4433-862d-5f855a911dde","tool":"apply_patch"}

@@ -75,7 +75,7 @@ sequenceDiagram
 |------|-----------------|----------|---------|
 | S1 | Approver clicks Approve | `backend/src/InvoiceApp.Api/wwwroot/app.js:72` | `approve.addEventListener('click', () => decide(...))` |
 | S2 | UI sends approval POST | `backend/src/InvoiceApp.Api/wwwroot/app.js:82-85,16-19` | `decide(path, payload)` posts via `api`; `fetch(`/api${path}`...)` |
-| S3 | Bearer token added | `backend/src/InvoiceApp.Api/wwwroot/app.js:18-19` | `headers.Authorization = ...`; `fetch(...)` |
+| S3 | UI attaches bearer token to API request | `backend/src/InvoiceApp.Api/wwwroot/app.js:18-19` | Sets `headers.Authorization` before `fetch(...)`. |
 | S4 | Middleware checks protected API request | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:16-25` | `InvokeAsync`; `needsSession`; `_sessions.Get(token)` |
 | S5 | SessionStore token lookup | `backend/src/InvoiceApp.Api/Auth/SessionStore.cs:18-19` | `Get(string? token)`; `_sessions.TryGetValue(...)` |
 | S6 | Missing/invalid token returns 401 | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:27-31` | `if (session is null)`; `Status401Unauthorized` |

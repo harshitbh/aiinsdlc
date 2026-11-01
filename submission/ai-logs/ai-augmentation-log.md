@@ -618,3 +618,65 @@ Quality: Commands correct. Thin-data caveat added by human.
 Copilot did not flag sample size limitation unprompted.
 Two numbers captured as required. Third metric documented
 with ready command for when PR history exists.
+
+---
+
+### Interaction 20 — Submission consistency corrections
+**Log ID:** T5-P20-20261101
+**Timestamp:** 2026-11-01T14:28:30Z
+**Session ref:** submission-follow-up
+
+**1. AI Tool and Model**
+Tool: Copilot SDK in VS Code | Model: not exposed | Agent type: built-in | Execution mode: Agent
+
+**2. Agent Details**
+Custom instructions: .github/copilot-instructions.md | Subagent: none | Skills: none
+
+**3. Prompt submitted**
+Update all files required based on the submission gap review. Reconcile
+inconsistent evidence, correct factual claims, and leave work requiring
+an actual Copilot review run or screen recording unclaimed.
+
+**4. Skills and Sub-agents:** None
+
+**5. Tools and Integrations**
+File reads/writes: architecture sequence citation, exactly-once ADR,
+cost and 3 a.m. analysis, evaluation cases/results, risk audit,
+measurement plan and captured baseline, AI augmentation log.
+
+**6. AI Actions and Output**
+Type: submission-correction
+Files updated: submission/architecture/approval-sequence.md,
+submission/architecture/target-state.md, submission/architecture/target.mmd,
+submission/adr/001-exactly-once-payex.md,
+submission/cost/task-2-cost-review.md,
+submission/risk/task-2-3am-analysis.md,
+submission/risk/trifecta-audit.md,
+submission/autonomy/dependency-bumps.md,
+submission/evals/cases/case-11.diff,
+submission/evals/cases/case-11-expected.md,
+submission/evals/cases/case-12.diff,
+submission/evals/cases/case-12-expected.md,
+submission/evals/results.md,
+submission/metrics/measurement-plan.md,
+submission/metrics/baseline-captured.md.
+Summary: Corrected evidence and wording; did not fabricate missing model
+responses, PayEx guarantees, Azure dollar prices, or video artifact.
+
+**7. Human Intervention**
+Changes: no
+Validation: Existing user changes were preserved. Missing eval-run records
+and video upload remain explicitly identified as outstanding.
+
+**8. Execution Evidence**
+Architecture test: 1 passed, 0 failed using the documented local .NET SDK.
+Evaluation suite: not rerun; requires actual review-model responses.
+Video: not recorded or uploaded.
+
+**9. Outcome**
+Status: partial
+Quality: Corrected the reported 0/15 figure to CI run failure rate rather
+than deployment change failure rate, and clarified that the prior
+"read-only enforced" audit decision is proposed but not technically
+verified. External PayEx idempotency behavior, priced Azure monthly costs,
+verified evaluation runs, and the demo video still require real evidence.
