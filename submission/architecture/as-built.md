@@ -1,0 +1,110 @@
+# As-Built Architecture
+
+```mermaid
+flowchart LR
+    subgraph Browser[Browser]
+        User[User]
+        WebUI[Static web UI<br/>wwwroot]
+    end
+
+    subgraph Process[ASP.NET Core Process]
+        Host[ASP.NET Core host<br/>Program.cs]
+        Middleware[SessionAuthMiddleware<br/>Auth/SessionAuthMiddleware.cs]
+        AuthController[AuthController<br/>Controllers/AuthController.cs]
+        InvoicesController[InvoicesController<br/>Controllers/InvoicesController.cs]
+        ApprovalsController[ApprovalsController<br/>Controllers/ApprovalsController.cs]
+        BaseController[ApiControllerBase.Handle<br/>Controllers/ApiControllerBase.cs]
+        ApprovalService[ApprovalService<br/>Domain/ApprovalService.cs]
+        Repository[InMemoryInvoiceRepository<br/>InMemoryInvoiceRepository.cs]
+        Sessions[SessionStore<br/>Auth/SessionStore.cs]
+        Users[appsettings Users<br/>appsettings.json]
+        DI[Dependency injection registrations<br/>Program.cs]
+    end
+
+    subgraph BuildTest[Build and Test]
+        CI[GitHub Actions CI<br/>.github/workflows/ci.yml]
+        TestProject[InvoiceApp.Tests<br/>backend/tests/InvoiceApp.Tests]
+        ArchitectureTest[ArchitectureTests<br/>reflection rule]
+    end
+
+    User --> WebUI
+    Host -->|serve static files| WebUI
+    WebUI -->|login request| AuthController
+    WebUI -->|API request with bearer token| Middleware
+    Middleware -->|login excluded from session check| AuthController
+    Middleware -->|authorized request| InvoicesController
+    Middleware -->|authorized request| ApprovalsController
+    Middleware --> Sessions
+    Users -->|configuration binding| AuthController
+    AuthController -->|create or remove session| Sessions
+
+    InvoicesController -->|Submit| ApprovalService
+    InvoicesController -->|list, read, create, delete| Repository
+    ApprovalsController -->|Approve or Reject| ApprovalService
+    InvoicesController -->|Handle service result| BaseController
+    ApprovalsController -->|Handle service result| BaseController
+    ApprovalService -->|GetById and Update| Repository
+
+    Host --> Middleware
+    Host -->|MapControllers| AuthController
+    Host -->|MapControllers| InvoicesController
+    Host -->|MapControllers| ApprovalsController
+    DI -.->|AddControllers and configure options| Host
+    DI -.->|singleton| Sessions
+    DI -.->|singleton implementation| Repository
+    DI -.->|scoped| ApprovalService
+    DI -.->|bind configuration| Users
+
+    CI -->|dotnet build and test solution| TestProject
+    TestProject --> ArchitectureTest
+    TestProject -->|project reference| ApprovalService
+```
+
+## Citation Table
+
+| Ref | Element or Arrow | Location | Symbol |
+|------|-----------------|----------|---------|
+| C1 | User node | No source file | External actor; not represented by a code symbol (inferred). |
+| C2 | Static web UI node | `backend/src/InvoiceApp.Api/wwwroot/index.html:1`; `backend/src/InvoiceApp.Api/wwwroot/app.js:1` | `<!doctype html>`; `(() => {` |
+| C3 | ASP.NET Core host node | `backend/src/InvoiceApp.Api/Program.cs:6,17,24` | `WebApplication.CreateBuilder(args)`; `builder.Build()`; `app.Run()` |
+| C4 | SessionAuthMiddleware node | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:4,16` | `public class SessionAuthMiddleware`; `InvokeAsync(HttpContext context)` |
+| C5 | AuthController node | `backend/src/InvoiceApp.Api/Controllers/AuthController.cs:9,24` | `public class AuthController`; `Login([FromBody] LoginRequest request)` |
+| C6 | InvoicesController node | `backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs:9,23` | `public class InvoicesController`; `GetAll([FromQuery] string? status)` |
+| C7 | ApprovalsController node | `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs:10,22` | `public class ApprovalsController`; `Approve(string invoiceId)` |
+| C8 | ApiControllerBase.Handle node | `backend/src/InvoiceApp.Api/Controllers/ApiControllerBase.cs:6,9` | `public abstract class ApiControllerBase`; `Handle(Func<Invoice> action)` |
+| C9 | ApprovalService node | `backend/src/InvoiceApp.Domain/ApprovalService.cs:7,16` | `public class ApprovalService`; `Submit(string invoiceId)` |
+| C10 | InMemoryInvoiceRepository node | `backend/src/InvoiceApp.Api/InMemoryInvoiceRepository.cs:5,20` | `public class InMemoryInvoiceRepository`; `GetAll()` |
+| C11 | SessionStore node | `backend/src/InvoiceApp.Api/Auth/SessionStore.cs:7,11,18,21` | `public class SessionStore`; `Create`, `Get`, `Remove` |
+| C12 | appsettings Users node | `backend/src/InvoiceApp.Api/appsettings.json:9` | `"Users": [` |
+| C13 | Dependency injection registrations node | `backend/src/InvoiceApp.Api/Program.cs:8-15` | `AddControllers`, `Configure<DemoUsersOptions>`, `AddSingleton`, `AddScoped` |
+| C14 | GitHub Actions CI node | `.github/workflows/ci.yml:1,8` | `name: CI`; `build-and-test:` |
+| C15 | InvoiceApp.Tests project node | `backend/tests/InvoiceApp.Tests/InvoiceApp.Tests.csproj:1,3` | SDK project declaration; `<TargetFramework>net8.0</TargetFramework>` |
+| C16 | ArchitectureTests node | `backend/tests/InvoiceApp.Tests/ArchitectureTests.cs:7,10` | `public class ArchitectureTests`; `Domain_DoesNotReferenceApiOrAspNetCore()` |
+| C17 | User to WebUI | No source file | External user interaction; not established by repository code (inferred). |
+| C18 | Host serves static files | `backend/src/InvoiceApp.Api/Program.cs:19-20` | `app.UseDefaultFiles()`; `app.UseStaticFiles()` |
+| C19 | WebUI login request to AuthController | `backend/src/InvoiceApp.Api/wwwroot/app.js:103-107`; `backend/src/InvoiceApp.Api/Controllers/AuthController.cs:8,23-24` | `api('/auth/login', ...)`; `[Route("api/auth")]`; `[HttpPost("login")]` |
+| C20 | WebUI bearer-token API request through middleware | `backend/src/InvoiceApp.Api/wwwroot/app.js:17-19`; `backend/src/InvoiceApp.Api/Program.cs:21` | `headers.Authorization = ...`; `fetch(`/api${path}`...)`; `UseMiddleware<SessionAuthMiddleware>()` |
+| C21 | Middleware allows login through and continues pipeline | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:19,36`; `backend/src/InvoiceApp.Api/Program.cs:22` | Login exclusion in `needsSession`; `_next(context)`; `MapControllers()` |
+| C22 | Middleware validates session before invoice routes | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:22-36`; `backend/src/InvoiceApp.Api/Program.cs:22`; `backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs:8` | Session validation then `_next(context)`; `MapControllers()`; route attribute. Middleware validates session, not role. |
+| C23 | Middleware validates session before approval routes | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:22-36`; `backend/src/InvoiceApp.Api/Program.cs:22`; `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs:8-9` | Session validation then `_next(context)`; `MapControllers()`; route and `[RequireRole("Approver", "Admin")]`. Middleware validates session, not role. |
+| C24 | Middleware looks up session | `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs:25`; `backend/src/InvoiceApp.Api/Auth/SessionStore.cs:18-19` | `_sessions.Get(token)`; `Get(string? token)` |
+| C25 | appsettings Users bound to AuthController options | `backend/src/InvoiceApp.Api/Program.cs:12`; `backend/src/InvoiceApp.Api/Controllers/AuthController.cs:26` | `Configure<DemoUsersOptions>(builder.Configuration)`; `_options.Users.FirstOrDefault(...)` |
+| C26 | AuthController creates/removes session | `backend/src/InvoiceApp.Api/Controllers/AuthController.cs:34,44` | `_sessions.Create(...)`; `_sessions.Remove(...)` |
+| C27 | InvoicesController submits through ApprovalService | `backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs:70` | `Handle(() => _approvals.Submit(id))` |
+| C28 | InvoicesController calls repository | `backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs:25,43,60,75` | `_repository.GetAll()`; `_repository.GetById(id)`; `_repository.Add(...)`; `_repository.Remove(id)` |
+| C29 | ApprovalsController calls ApprovalService | `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs:23,27` | `_approvals.Approve(...)`; `_approvals.Reject(...)` |
+| C30 | InvoicesController calls Handle | `backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs:70`; `backend/src/InvoiceApp.Api/Controllers/ApiControllerBase.cs:9` | `Handle(() => _approvals.Submit(id))`; `Handle(Func<Invoice> action)` |
+| C31 | ApprovalsController calls Handle | `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs:23,27`; `backend/src/InvoiceApp.Api/Controllers/ApiControllerBase.cs:9` | Both actions call `Handle(...)`; base declares `Handle(Func<Invoice> action)`. |
+| C32 | ApprovalService reads/updates repository | `backend/src/InvoiceApp.Domain/ApprovalService.cs:27,39,57,62`; `backend/src/InvoiceApp.Api/InMemoryInvoiceRepository.cs:25,50` | `_repository.GetById(invoiceId)`; `_repository.Update(invoice)`; implementation methods. |
+| C33 | Host installs SessionAuthMiddleware | `backend/src/InvoiceApp.Api/Program.cs:21` | `app.UseMiddleware<SessionAuthMiddleware>()` |
+| C34 | Host maps AuthController routes | `backend/src/InvoiceApp.Api/Program.cs:22`; `backend/src/InvoiceApp.Api/Controllers/AuthController.cs:8` | `app.MapControllers()`; `[Route("api/auth")]` |
+| C35 | Host maps InvoicesController routes | `backend/src/InvoiceApp.Api/Program.cs:22`; `backend/src/InvoiceApp.Api/Controllers/InvoicesController.cs:8` | `app.MapControllers()`; `[Route("api/[controller]")]` |
+| C36 | Host maps ApprovalsController routes | `backend/src/InvoiceApp.Api/Program.cs:22`; `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs:8` | `app.MapControllers()`; `[Route("api/[controller]")]` |
+| C37 | DI configures controllers/options and builds host | `backend/src/InvoiceApp.Api/Program.cs:8-10,17` | `AddControllers().AddJsonOptions(...)`; `builder.Build()` |
+| C38 | DI registers SessionStore singleton | `backend/src/InvoiceApp.Api/Program.cs:13` | `AddSingleton<SessionStore>()` |
+| C39 | DI registers repository singleton | `backend/src/InvoiceApp.Api/Program.cs:14` | `AddSingleton<IInvoiceRepository, InMemoryInvoiceRepository>()` |
+| C40 | DI registers ApprovalService scoped | `backend/src/InvoiceApp.Api/Program.cs:15` | `AddScoped<ApprovalService>()` |
+| C41 | DI binds Users configuration | `backend/src/InvoiceApp.Api/Program.cs:12`; `backend/src/InvoiceApp.Api/appsettings.json:9` | `Configure<DemoUsersOptions>(builder.Configuration)`; `"Users": [` |
+| C42 | CI builds/tests solution | `.github/workflows/ci.yml:14-16`; `backend/tests/InvoiceApp.Tests/InvoiceApp.Tests.csproj:1,3` | `dotnet build backend/InvoiceApp.sln`; `dotnet test backend/InvoiceApp.sln`; target framework `net8.0`. |
+| C43 | Test project contains ArchitectureTests | `backend/tests/InvoiceApp.Tests/ArchitectureTests.cs:7,10`; `backend/tests/InvoiceApp.Tests/InvoiceApp.Tests.csproj:1` | `ArchitectureTests` class and test method are in SDK-style test project. |
+| C44 | Test project reference | `backend/tests/InvoiceApp.Tests/InvoiceApp.Tests.csproj:15` | `<ProjectReference Include="..\..\src\InvoiceApp.Domain\InvoiceApp.Domain.csproj" />`; this references the Domain project, not ApprovalService directly. |
