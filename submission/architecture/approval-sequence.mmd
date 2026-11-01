@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor User
+    participant C as ApprovalsController (ApprovalsController.cs:10)
+    participant S as ApprovalService (ApprovalService.cs:7)
+    participant R as IInvoiceRepository (IInvoiceRepository.cs:3)
+
+    User->>C: POST api/Approvals/{invoiceId}/approve (ApprovalsController.cs:8,21-23)
+    C->>S: Approve(invoiceId, HttpContext.GetSession().Username) (ApprovalsController.cs:22-23)
+    S->>S: Find(invoiceId) (ApprovalService.cs:33,61-63)
+    S->>R: GetById(invoiceId) (ApprovalService.cs:62; IInvoiceRepository.cs:6)
+    R-->>S: Invoice? (IInvoiceRepository.cs:6)
+    S->>S: EnsurePending(invoice) (ApprovalService.cs:34,65-72)
+    S->>R: Update(invoice) (ApprovalService.cs:39; IInvoiceRepository.cs:9)
+    R-->>S: void (IInvoiceRepository.cs:9)
+    S-->>C: Invoice (ApprovalService.cs:40)
+    C-->>User: Ok(action()) (ApiControllerBase.cs:13)
