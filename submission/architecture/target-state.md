@@ -124,16 +124,16 @@ sequenceDiagram
     participant Finance as Finance team
 
     Approver->>Controller: Approve invoice
-    Controller->>Service: Approve(invoiceId, approver)
+    Controller->>Service: Call Approve with invoice id and approver
     Service->>Repository: Save approval transaction
     Repository->>SQL: Begin transaction
     Repository->>SQL: Update invoice status and decision fields
     Repository->>SQL: Insert ApprovalAudit row
-    Repository->>SQL: Insert PaymentSubmission outbox row with stable key
+    Repository->>SQL: Insert PaymentSubmission outbox row and stable key
     Repository->>SQL: Commit transaction
     Repository-->>Service: Commit successful
     Service-->>Controller: Approved invoice
-    Controller-->>Approver: 200 success (does not wait for PayEx)
+    Controller-->>Approver: HTTP 200 approval accepted without waiting for PayEx
 
     loop Poll and lease available outbox work
         Dispatcher->>SQL: Claim eligible outbox row with lease
@@ -149,22 +149,22 @@ sequenceDiagram
             PayEx-->>Dispatcher: Validation response
             Dispatcher->>SQL: Mark terminal failure or manual-review state
             Dispatcher->>Insights: Record failure and alert
-        else PayEx timeout (outcome unknown)
+        else PayEx timeout outcome unknown
             PayEx-->>Dispatcher: No definitive response before timeout
             Dispatcher->>SQL: Mark outcome Unknown and retain same idempotency key
             Dispatcher->>Insights: Record timeout and alert
-            alt Still within provider key-retention window and retry is safe
+            alt Key is still valid and retry is safe
                 Dispatcher->>SQL: Schedule retry using same key
             else Key expired or outcome cannot be confirmed
-                Dispatcher->>SQL: Stop blind retries; mark manual review
+                Dispatcher->>SQL: Stop blind retries and mark manual review
                 Dispatcher->>Insights: Alert on unresolved payment
             end
-        else Retryable transport or service failure
+        else Retryable transport failure
             PayEx-->>Dispatcher: Transient failure
             Dispatcher->>SQL: Schedule bounded retry with backoff and same key
             Dispatcher->>Insights: Record attempt and retry state
             alt Retry limit exhausted
-                Dispatcher->>SQL: Move to dead-letter/manual-review state
+                Dispatcher->>SQL: Mark dead letter for manual review
                 Dispatcher->>Insights: Alert on terminal backlog item
             end
         end
