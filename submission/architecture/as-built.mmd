@@ -1,14 +1,57 @@
-graph TD
-    Host["ASP.NET Core app host<br/>Program.cs:6; Program.cs:17; Program.cs:24"]
-    InvoicesController["InvoicesController<br/>InvoicesController.cs:9; InvoicesController.cs:70"]
-    ApprovalsController["ApprovalsController<br/>ApprovalsController.cs:10; ApprovalsController.cs:22; ApprovalsController.cs:26"]
-    ApprovalService["ApprovalService<br/>ApprovalService.cs:7; ApprovalService.cs:16; ApprovalService.cs:31; ApprovalService.cs:43"]
-    Repository["IInvoiceRepository<br/>IInvoiceRepository.cs:3; IInvoiceRepository.cs:6; IInvoiceRepository.cs:9<br/>Registered as InMemoryInvoiceRepository<br/>Program.cs:14"]
+flowchart LR
+    subgraph Browser[Browser]
+        User[User]
+        WebUI[Static web UI<br/>wwwroot]
+    end
 
-    Host -->|AddControllers and MapControllers; Program.cs 9,22| InvoicesController
-    Host -->|AddControllers and MapControllers; Program.cs 9,22| ApprovalsController
-    Host -->|AddScoped ApprovalService; Program.cs 15| ApprovalService
-    Host -->|AddSingleton IInvoiceRepository to InMemoryInvoiceRepository; Program.cs 14| Repository
-    InvoicesController -->|Submit call; InvoicesController.cs 70| ApprovalService
-    ApprovalsController -->|Approve and Reject calls; ApprovalsController.cs 22-27| ApprovalService
-    ApprovalService -->|GetById and Update calls; ApprovalService.cs 27,39,57,62; IInvoiceRepository.cs 6,9| Repository
+    subgraph Process[ASP.NET Core Process]
+        Host[ASP.NET Core host<br/>Program.cs]
+        Middleware[SessionAuthMiddleware<br/>Auth/SessionAuthMiddleware.cs]
+        AuthController[AuthController<br/>Controllers/AuthController.cs]
+        InvoicesController[InvoicesController<br/>Controllers/InvoicesController.cs]
+        ApprovalsController[ApprovalsController<br/>Controllers/ApprovalsController.cs]
+        BaseController[ApiControllerBase.Handle<br/>Controllers/ApiControllerBase.cs]
+        ApprovalService[ApprovalService<br/>Domain/ApprovalService.cs]
+        Repository[InMemoryInvoiceRepository<br/>InMemoryInvoiceRepository.cs]
+        Sessions[SessionStore<br/>Auth/SessionStore.cs]
+        Users[appsettings Users<br/>appsettings.json]
+        DI[Dependency injection registrations<br/>Program.cs]
+    end
+
+    subgraph BuildTest[Build and Test]
+        CI[GitHub Actions CI<br/>.github/workflows/ci.yml]
+        TestProject[InvoiceApp.Tests<br/>backend/tests/InvoiceApp.Tests]
+        ArchitectureTest[ArchitectureTests<br/>reflection rule]
+    end
+
+    User --> WebUI
+    Host -->|serve static files| WebUI
+    WebUI -->|login request| AuthController
+    WebUI -->|API request with bearer token| Middleware
+    Middleware -->|login excluded from session check| AuthController
+    Middleware -->|authorized request| InvoicesController
+    Middleware -->|authorized request| ApprovalsController
+    Middleware --> Sessions
+    Users -->|configuration binding| AuthController
+    AuthController -->|create or remove session| Sessions
+
+    InvoicesController -->|Submit| ApprovalService
+    InvoicesController -->|list, read, create, delete| Repository
+    ApprovalsController -->|Approve or Reject| ApprovalService
+    InvoicesController -->|Handle service result| BaseController
+    ApprovalsController -->|Handle service result| BaseController
+    ApprovalService -->|GetById and Update| Repository
+
+    Host --> Middleware
+    Host -->|MapControllers| AuthController
+    Host -->|MapControllers| InvoicesController
+    Host -->|MapControllers| ApprovalsController
+    DI -.->|AddControllers and configure options| Host
+    DI -.->|singleton| Sessions
+    DI -.->|singleton implementation| Repository
+    DI -.->|scoped| ApprovalService
+    DI -.->|bind configuration| Users
+
+    CI -->|dotnet build and test solution| TestProject
+    TestProject --> ArchitectureTest
+    TestProject -->|project reference| ApprovalService
